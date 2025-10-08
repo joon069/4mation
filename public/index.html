@@ -8,9 +8,12 @@
 </head>
 <body>
     <div id="mode-selection">
+        <h1>4mation Game</h1>
         <button id="offline-button">Play Offline</button>
+        <button id="online-button">Play Online</button>
     </div>
     <div id="game-container" class="hidden">
+        <div id="status-message" class="hidden"></div>
         <div id="info">
             <div id="red-info">Red: <span id="red-count">24</span></div>
             <div id="blue-info">Blue: <span id="blue-count">24</span></div>
@@ -25,6 +28,7 @@
         <h2 id="winner-message"></h2>
         <button id="restart-button">Restart</button>
     </div>
-    <script src="script.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="online-script.js"></script>
 </body>
 </html>
