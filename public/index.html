@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4mation Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="mode-selection">
+        <button id="offline-button">Play Offline</button>
+    </div>
+    <div id="game-container" class="hidden">
+        <div id="info">
+            <div id="red-info">Red: <span id="red-count">24</span></div>
+            <div id="blue-info">Blue: <span id="blue-count">24</span></div>
+        </div>
+        <div id="control-panel">
+            <button id="undo-button">Undo</button>
+            <button id="exit-button">게임 중단하기</button>
+        </div>
+        <div id="game-board"></div>
+    </div>
+    <div id="game-over-screen" class="hidden">
+        <h2 id="winner-message"></h2>
+        <button id="restart-button">Restart</button>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
