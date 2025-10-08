@@ -623,6 +623,10 @@ body {
     display: none !important;
 }
 
+.offline-only.hidden-online {
+    display: none !important;
+}
+
 /* 반응형 */
 @media (max-width: 768px) {
     #game-board {
