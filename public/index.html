@@ -7,27 +7,94 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="mode-selection">
+    <!-- 로그인 화면 -->
+    <div id="login-screen">
         <h1>4mation Game</h1>
+        <div class="login-box">
+            <input type="text" id="nickname-input" placeholder="닉네임을 입력하세요" maxlength="12">
+            <button id="login-button">입장하기</button>
+        </div>
+    </div>
+
+    <!-- 모드 선택 화면 -->
+    <div id="mode-selection" class="hidden">
+        <h1>4mation Game</h1>
+        <div class="user-info">
+            <span id="current-nickname"></span>
+        </div>
         <button id="offline-button">Play Offline</button>
         <button id="online-button">Play Online</button>
     </div>
+
+    <!-- 온라인 로비 -->
+    <div id="online-lobby" class="hidden">
+        <h2>온라인 로비</h2>
+        <button id="back-to-menu">메뉴로 돌아가기</button>
+        
+        <!-- 공용 채팅 -->
+        <div id="chat-section">
+            <h3>공용 채팅</h3>
+            <div id="chat-messages"></div>
+            <div id="chat-input-area">
+                <input type="text" id="chat-input" placeholder="메시지를 입력하세요" maxlength="100">
+                <button id="chat-send">전송</button>
+            </div>
+        </div>
+
+        <!-- 온라인 유저 목록 -->
+        <div id="online-users-section">
+            <h3>온라인 유저 (<span id="online-count">0</span>)</h3>
+            <div id="online-users-list"></div>
+        </div>
+    </div>
+
+    <!-- 게임 화면 -->
     <div id="game-container" class="hidden">
-        <div id="status-message" class="hidden"></div>
+        <div id="game-header">
+            <div id="status-message" class="hidden"></div>
+            <div id="opponent-name"></div>
+        </div>
+        
         <div id="info">
-            <div id="red-info">Red: <span id="red-count">24</span></div>
+            <div id="red-info">Red: <span id="red-count">23</span></div>
             <div id="blue-info">Blue: <span id="blue-count">24</span></div>
         </div>
+
+        <!-- 이모티콘 패널 -->
+        <div id="emoji-panel">
+            <button class="emoji-btn" data-emoji="👍">👍</button>
+            <button class="emoji-btn" data-emoji="👎">👎</button>
+            <button class="emoji-btn" data-emoji="😅">😅</button>
+            <button class="emoji-btn" data-emoji="🤣">🤣</button>
+            <button class="emoji-btn" data-emoji="🥱">🥱</button>
+        </div>
+        <div id="emoji-display"></div>
+
         <div id="control-panel">
             <button id="undo-button">Undo</button>
             <button id="exit-button">게임 중단하기</button>
         </div>
         <div id="game-board"></div>
     </div>
+
+    <!-- 게임 오버 화면 -->
     <div id="game-over-screen" class="hidden">
         <h2 id="winner-message"></h2>
         <button id="restart-button">Restart</button>
     </div>
+
+    <!-- 매칭 요청 모달 -->
+    <div id="match-request-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>매칭 요청</h3>
+            <p id="match-request-text"></p>
+            <div class="modal-buttons">
+                <button id="accept-match">수락</button>
+                <button id="decline-match">거절</button>
+            </div>
+        </div>
+    </div>
+
     <script src="/socket.io/socket.io.js"></script>
     <script src="online-script.js"></script>
 </body>
