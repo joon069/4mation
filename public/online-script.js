@@ -98,14 +98,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function sendChatMessage() {
         const message = chatInput.value.trim();
         if (message === "") return;
-        
-        if (sentChatMessages.has(message)) {
-            alert("같은 메시지를 중복으로 보낼 수 없습니다!");
-            return;
-        }
 
         socket.emit('chatMessage', { message });
-        sentChatMessages.add(message);
         chatInput.value = "";
     }
 
@@ -164,6 +158,9 @@ document.addEventListener("DOMContentLoaded", () => {
         
         if (gameMode === 'online') {
             updateTurnIndicator();
+            undoButton.classList.add("hidden-online");
+        } else {
+            undoButton.classList.remove("hidden-online");
         }
     }
 
@@ -359,6 +356,26 @@ document.addEventListener("DOMContentLoaded", () => {
         gameOverScreen.classList.remove("hidden");
     }
 
+    function returnToLobby() {
+        gameContainer.classList.add("hidden");
+        gameOverScreen.classList.add("hidden");
+        onlineLobby.classList.remove("hidden");
+        
+        centralBlockPlaced = false;
+        redCount = 23;
+        blueCount = 24;
+        currentPlayer = "red";
+        lastPlacedIndex = null;
+        lastPlayer = null;
+        moveHistory = [];
+        roomId = null;
+        myColor = null;
+        isMyTurn = false;
+        opponentNickname = null;
+        
+        socket.emit('returnToLobby');
+    }
+
     function updateBlockCounts() {
         redCountElement.textContent = redCount;
         blueCountElement.textContent = blueCount;
@@ -407,15 +424,13 @@ document.addEventListener("DOMContentLoaded", () => {
         if (gameMode === 'offline') {
             resetGame();
         } else {
-            window.location.reload();
+            returnToLobby();
         }
     });
 
     undoButton.addEventListener("click", () => {
         if (gameMode === 'offline') {
             undoLastMove();
-        } else {
-            socket.emit('undoMove', { roomId });
         }
     });
 
@@ -451,9 +466,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     exitButton.addEventListener("click", () => {
         if (gameMode === 'online') {
-            socket.emit('exitGame', { roomId });
+            if (confirm("게임을 중단하시겠습니까? (항복 처리됩니다)")) {
+                socket.emit('surrenderGame', { roomId });
+            }
+        } else {
+            window.location.reload();
         }
-        window.location.reload();
     });
 
     // === Socket.io 이벤트 ===
@@ -532,9 +550,24 @@ document.addEventListener("DOMContentLoaded", () => {
     socket.on('gameOver', (data) => {
         if (data.winner === 'draw') {
             endGame("Draw!");
+        } else if (data.reason === 'surrender') {
+            if (data.winner === myColor) {
+                endGame("상대가 항복했습니다. 당신의 승리입니다!");
+            } else {
+                endGame("당신은 항복하셨습니다.");
+            }
         } else {
             const winnerText = data.winner === myColor ? "You Win!" : "You Lose!";
             endGame(`${winnerText} (${data.winner.toUpperCase()} wins)`);
+        }
+    });
+
+    socket.on('returnedToLobby', () => {
+        const user = users.get(socket.id);
+        if (user) {
+            user.inLobby = true;
+            lobbyUsers.add(socket.id);
+            broadcastOnlineUsers();
         }
     });
 
