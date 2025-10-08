@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let isMyTurn = false;
     let opponentNickname = null;
     let currentMatchRequest = null;
-    let sentChatMessages = new Set();
 
     // === 로그인 ===
     loginButton.addEventListener("click", handleLogin);
