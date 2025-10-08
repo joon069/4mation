@@ -253,7 +253,37 @@ io.on('connection', (socket) => {
         io.to(roomId).emit('receiveEmoji', { emoji });
     });
 
-    // 게임 종료
+    // 게임 항복
+    socket.on('surrenderGame', ({ roomId }) => {
+        const room = rooms.get(roomId);
+        if (!room) return;
+
+        let winner;
+        if (room.players.red === socket.id) {
+            winner = 'blue';
+        } else {
+            winner = 'red';
+        }
+
+        io.to(roomId).emit('gameOver', { 
+            winner, 
+            reason: 'surrender' 
+        });
+        
+        cleanupRoom(roomId);
+    });
+
+    // 로비로 복귀
+    socket.on('returnToLobby', () => {
+        const user = users.get(socket.id);
+        if (user) {
+            user.inLobby = true;
+            lobbyUsers.add(socket.id);
+            broadcastOnlineUsers();
+        }
+    });
+
+    // 게임 종료 (연결 끊김용)
     socket.on('exitGame', ({ roomId }) => {
         io.to(roomId).emit('opponentDisconnected');
         cleanupRoom(roomId);
